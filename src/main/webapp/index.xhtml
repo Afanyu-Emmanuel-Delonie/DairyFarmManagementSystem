@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html">
+<h:head>
+    <title>Dashboard — GreenPasture MIS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <!-- Internal CSS: page-level refinements -->
+    <style>
+        .stat-card-value { font-variant-numeric: tabular-nums; }
+        @media print {
+            .sidebar, .topbar { display: none; }
+            .main { margin-left: 0; }
+        }
+    </style>
+</h:head>
+<h:body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <a href="#" class="sidebar-brand">
+            <div class="sidebar-brand-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C8 8 5 12 5 15a7 7 0 0 0 14 0c0-3-3-7-7-13z"/>
+                </svg>
+            </div>
+            <div>
+                <div class="sidebar-brand-text">GreenPasture</div>
+                <div class="sidebar-brand-sub">Farm MIS</div>
+            </div>
+        </a>
+
+        <nav class="sidebar-nav">
+            <div class="sidebar-section-label">Main</div>
+
+            <h:link outcome="index" styleClass="nav-link active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                Dashboard
+            </h:link>
+
+            <h:link outcome="cattle" styleClass="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 7c0-1.1.9-2 2-2h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/>
+                    <path d="M8 15v4M16 15v4M7 5V3M17 5V3"/>
+                </svg>
+                Cattle Registry
+            </h:link>
+
+            <h:link outcome="milk_production" styleClass="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2C8 8 5 12 5 15a7 7 0 0 0 14 0c0-3-3-7-7-13z"/>
+                </svg>
+                Milk Production
+            </h:link>
+        </nav>
+
+        <div class="sidebar-footer">© 2026 GreenPasture MIS</div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main">
+        <header class="topbar">
+            <span class="topbar-title">Dashboard</span>
+            <span class="topbar-badge" style="letter-spacing:.03em">● Live</span>
+        </header>
+
+        <div class="page">
+            <div class="page-header">
+                <h1>Farm Overview</h1>
+                <p>Welcome back. Here's what's happening on your farm today.</p>
+            </div>
+
+            <!-- Stat strip -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-icon green">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 7c0-1.1.9-2 2-2h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/>
+                            <path d="M8 15v4M16 15v4"/>
+                        </svg>
+                    </div>
+                    <div class="stat-card-value">—</div>
+                    <div class="stat-card-label">Total Cattle</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon blue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2C8 8 5 12 5 15a7 7 0 0 0 14 0c0-3-3-7-7-13z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-card-value">—</div>
+                    <div class="stat-card-label">Today's Yield (L)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon green">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </div>
+                    <div class="stat-card-value">—</div>
+                    <div class="stat-card-label">Healthy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon amber">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                    </div>
+                    <div class="stat-card-value">—</div>
+                    <div class="stat-card-label">Under Care</div>
+                </div>
+            </div>
+
+            <!-- Feature cards -->
+            <div class="feature-grid">
+                <h:link outcome="cattle" styleClass="feature-card">
+                    <div class="feature-card-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3 7c0-1.1.9-2 2-2h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/>
+                            <path d="M8 15v4M16 15v4M7 5V3M17 5V3"/>
+                        </svg>
+                    </div>
+                    <h2>Cattle Registry</h2>
+                    <p>Register, update, and manage every animal on the farm with full health tracking.</p>
+                    <span class="feature-card-arrow">
+                        Open registry
+                        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </span>
+                </h:link>
+
+                <h:link outcome="milk_production" styleClass="feature-card">
+                    <div class="feature-card-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C8 8 5 12 5 15a7 7 0 0 0 14 0c0-3-3-7-7-13z"/>
+                        </svg>
+                    </div>
+                    <h2>Milk Production</h2>
+                    <p>Log morning and evening yields per animal and track production trends over time.</p>
+                    <span class="feature-card-arrow">
+                        Open records
+                        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </span>
+                </h:link>
+            </div>
+        </div>
+    </div>
+
+</h:body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>Milk Production — GreenPasture MIS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <!-- Internal CSS: page-level refinements -->
+    <style>
+        .table-wrap td { font-variant-numeric: tabular-nums; }
+        @media print {
+            .sidebar, .topbar, .actions { display: none; }
+            .main { margin-left: 0; }
+        }
+    </style>
+</h:head>
+<h:body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <a href="#" class="sidebar-brand">
+            <div class="sidebar-brand-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C8 8 5 12 5 15a7 7 0 0 0 14 0c0-3-3-7-7-13z"/>
+                </svg>
+            </div>
+            <div>
+                <div class="sidebar-brand-text">GreenPasture</div>
+                <div class="sidebar-brand-sub">Farm MIS</div>
+            </div>
+        </a>
+
+        <nav class="sidebar-nav">
+            <div class="sidebar-section-label">Main</div>
+
+            <h:link outcome="index" styleClass="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                Dashboard
+            </h:link>
+
+            <h:link outcome="cattle" styleClass="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 7c0-1.1.9-2 2-2h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/>
+                    <path d="M8 15v4M16 15v4M7 5V3M17 5V3"/>
+                </svg>
+                Cattle Registry
+            </h:link>
+
+            <h:link outcome="milk_production" styleClass="nav-link active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2C8 8 5 12 5 15a7 7 0 0 0 14 0c0-3-3-7-7-13z"/>
+                </svg>
+                Milk Production
+            </h:link>
+        </nav>
+
+        <div class="sidebar-footer">© 2026 GreenPasture MIS</div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main">
+        <header class="topbar">
+            <span class="topbar-title">Milk Production</span>
+            <span class="topbar-badge">Daily Records</span>
+        </header>
+
+        <div class="page">
+            <div class="page-header">
+                <h1>Milk Production</h1>
+                <p>Log daily yield per animal and shift.</p>
+            </div>
+
+            <h:messages styleClass="messages" infoClass="info" warnClass="warn" errorClass="error"/>
+
+            <div class="content-grid">
+
+                <!-- Form card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2><span/>#{milkProductionBean.production.id == null ? 'Add Record' : 'Edit Record'}</h2>
+                    </div>
+                    <div class="card-body">
+                        <h:form>
+                            <div class="field">
+                                <h:outputLabel for="cattle" value="Cattle"/>
+                                <h:selectOneMenu id="cattle" value="#{milkProductionBean.production.cattle}"
+                                                 required="true" requiredMessage="Cattle is required"
+                                                 converter="cattleConverter">
+                                    <f:selectItem itemLabel="Select cattle" itemValue="#{null}" noSelectionOption="true"/>
+                                    <f:selectItems value="#{milkProductionBean.cattleList}" var="animal"
+                                                   itemValue="#{animal}" itemLabel="#{animal.tagNumber}"/>
+                                </h:selectOneMenu>
+                                <h:message for="cattle" styleClass="field-error"/>
+                            </div>
+
+                            <div class="field">
+                                <h:outputLabel for="recordDate" value="Record Date"/>
+                                <h:inputText id="recordDate" type="date" value="#{milkProductionBean.production.recordDate}"
+                                             required="true" requiredMessage="Record date is required">
+                                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                                </h:inputText>
+                                <h:message for="recordDate" styleClass="field-error"/>
+                            </div>
+
+                            <div class="field">
+                                <h:outputLabel for="shift" value="Shift"/>
+                                <h:selectOneMenu id="shift" value="#{milkProductionBean.production.shift}"
+                                                 required="true" requiredMessage="Shift is required">
+                                    <f:selectItem itemLabel="Select shift" itemValue=""/>
+                                    <f:selectItem itemLabel="Morning" itemValue="Morning"/>
+                                    <f:selectItem itemLabel="Evening" itemValue="Evening"/>
+                                </h:selectOneMenu>
+                                <h:message for="shift" styleClass="field-error"/>
+                            </div>
+
+                            <div class="field">
+                                <h:outputLabel for="quantity" value="Quantity (litres)"/>
+                                <h:inputText id="quantity" value="#{milkProductionBean.production.quantityLiters}"
+                                             required="true" requiredMessage="Quantity is required">
+                                    <f:convertNumber type="number" minFractionDigits="1"/>
+                                    <f:validator validatorId="milkQuantityValidator"/>
+                                    <f:validateBean disabled="true"/>
+                                </h:inputText>
+                                <h:message for="quantity" styleClass="field-error"/>
+                            </div>
+
+                            <div class="actions">
+                                <h:commandButton value="Save" action="#{milkProductionBean.save}"/>
+                                <h:commandButton value="Clear" action="#{milkProductionBean.cancel}"
+                                                 immediate="true" styleClass="secondary"/>
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
+
+                <!-- Table card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2><span/>Production Records</h2>
+                    </div>
+                    <div class="card-body" style="padding:0">
+                        <h:form>
+                            <div class="table-wrap">
+                                <h:dataTable value="#{milkProductionBean.productionList}" var="item"
+                                             rendered="#{not empty milkProductionBean.productionList}">
+                                    <h:column><f:facet name="header">Cattle</f:facet>#{item.cattle.tagNumber}</h:column>
+                                    <h:column><f:facet name="header">Date</f:facet>#{item.recordDate}</h:column>
+                                    <h:column>
+                                        <f:facet name="header">Shift</f:facet>
+                                        <span class="badge #{item.shift == 'Morning' ? 'badge-amber' : 'badge-green'}">
+                                            #{item.shift}
+                                        </span>
+                                    </h:column>
+                                    <h:column><f:facet name="header">Litres</f:facet>#{item.quantityLiters}</h:column>
+                                    <h:column>
+                                        <f:facet name="header">Actions</f:facet>
+                                        <h:commandButton value="Edit"   action="#{milkProductionBean.edit(item)}"   styleClass="edit"/>
+                                        <h:commandButton value="Delete" action="#{milkProductionBean.delete(item)}" styleClass="danger"/>
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <h:outputText value="No production records yet."
+                                          rendered="#{empty milkProductionBean.productionList}" styleClass="empty"/>
+                        </h:form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</h:body>
+</html>

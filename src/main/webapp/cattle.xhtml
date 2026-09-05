@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>Cattle Registry — GreenPasture MIS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <!-- Internal CSS: page-level refinements -->
+    <style>
+        .table-wrap td { font-variant-numeric: tabular-nums; }
+        @media print {
+            .sidebar, .topbar, .actions { display: none; }
+            .main { margin-left: 0; }
+        }
+    </style>
+</h:head>
+<h:body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <a href="#" class="sidebar-brand">
+            <div class="sidebar-brand-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C8 8 5 12 5 15a7 7 0 0 0 14 0c0-3-3-7-7-13z"/>
+                </svg>
+            </div>
+            <div>
+                <div class="sidebar-brand-text">GreenPasture</div>
+                <div class="sidebar-brand-sub">Farm MIS</div>
+            </div>
+        </a>
+
+        <nav class="sidebar-nav">
+            <div class="sidebar-section-label">Main</div>
+
+            <h:link outcome="index" styleClass="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                Dashboard
+            </h:link>
+
+            <h:link outcome="cattle" styleClass="nav-link active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 7c0-1.1.9-2 2-2h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/>
+                    <path d="M8 15v4M16 15v4M7 5V3M17 5V3"/>
+                </svg>
+                Cattle Registry
+            </h:link>
+
+            <h:link outcome="milk_production" styleClass="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2C8 8 5 12 5 15a7 7 0 0 0 14 0c0-3-3-7-7-13z"/>
+                </svg>
+                Milk Production
+            </h:link>
+        </nav>
+
+        <div class="sidebar-footer">© 2026 GreenPasture MIS</div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main">
+        <header class="topbar">
+            <span class="topbar-title">Cattle Registry</span>
+            <span class="topbar-badge">Manage Animals</span>
+        </header>
+
+        <div class="page">
+            <div class="page-header">
+                <h1>Cattle Registry</h1>
+                <p>Register and manage all animals on the farm.</p>
+            </div>
+
+            <h:messages styleClass="messages" infoClass="info" warnClass="warn" errorClass="error"/>
+
+            <div class="content-grid">
+
+                <!-- Form card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2><span/>#{cattleBean.cattle.id == null ? 'Add Cattle' : 'Edit Cattle'}</h2>
+                    </div>
+                    <div class="card-body">
+                        <h:form>
+                            <div class="field">
+                                <h:outputLabel for="tag" value="Tag Number"/>
+                                <h:inputText id="tag" value="#{cattleBean.cattle.tagNumber}"
+                                             required="true" requiredMessage="Tag number is required">
+                                    <f:validator validatorId="cattleTagValidator"/>
+                                </h:inputText>
+                                <h:message for="tag" styleClass="field-error"/>
+                            </div>
+
+                            <div class="field">
+                                <h:outputLabel for="breed" value="Breed"/>
+                                <h:inputText id="breed" value="#{cattleBean.cattle.breed}"
+                                             required="true" requiredMessage="Breed is required"/>
+                                <h:message for="breed" styleClass="field-error"/>
+                            </div>
+
+                            <div class="field">
+                                <h:outputLabel for="birth" value="Date of Birth"/>
+                                <h:inputText id="birth" type="date" value="#{cattleBean.cattle.dateOfBirth}"
+                                             required="true" requiredMessage="Date of birth is required">
+                                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                                </h:inputText>
+                                <h:message for="birth" styleClass="field-error"/>
+                            </div>
+
+                            <div class="field">
+                                <h:outputLabel for="health" value="Health Status"/>
+                                <h:selectOneMenu id="health" value="#{cattleBean.cattle.healthStatus}"
+                                                 required="true" requiredMessage="Health status is required">
+                                    <f:selectItem itemLabel="Select status" itemValue=""/>
+                                    <f:selectItem itemLabel="Healthy"            itemValue="Healthy"/>
+                                    <f:selectItem itemLabel="Under observation"  itemValue="Under observation"/>
+                                    <f:selectItem itemLabel="Under treatment"    itemValue="Under treatment"/>
+                                </h:selectOneMenu>
+                                <h:message for="health" styleClass="field-error"/>
+                            </div>
+
+                            <div class="actions">
+                                <h:commandButton value="Save" action="#{cattleBean.save}"/>
+                                <h:commandButton value="Clear" action="#{cattleBean.cancel}"
+                                                 immediate="true" styleClass="secondary"/>
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
+
+                <!-- Table card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2><span/>All Cattle</h2>
+                    </div>
+                    <div class="card-body" style="padding:0">
+                        <h:form>
+                            <div class="table-wrap">
+                                <h:dataTable value="#{cattleBean.cattleList}" var="item"
+                                             rendered="#{not empty cattleBean.cattleList}">
+                                    <h:column><f:facet name="header">Tag</f:facet>#{item.tagNumber}</h:column>
+                                    <h:column><f:facet name="header">Breed</f:facet>#{item.breed}</h:column>
+                                    <h:column><f:facet name="header">Birth Date</f:facet>#{item.dateOfBirth}</h:column>
+                                    <h:column>
+                                        <f:facet name="header">Health</f:facet>
+                                        <span class="badge #{item.healthStatus == 'Healthy' ? 'badge-green' : item.healthStatus == 'Under observation' ? 'badge-amber' : 'badge-red'}">
+                                            #{item.healthStatus}
+                                        </span>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">Actions</f:facet>
+                                        <h:commandButton value="Edit"   action="#{cattleBean.edit(item)}"   styleClass="edit"/>
+                                        <h:commandButton value="Delete" action="#{cattleBean.delete(item)}" styleClass="danger"/>
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <h:outputText value="No cattle registered yet."
+                                          rendered="#{empty cattleBean.cattleList}" styleClass="empty"/>
+                        </h:form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</h:body>
+</html>
