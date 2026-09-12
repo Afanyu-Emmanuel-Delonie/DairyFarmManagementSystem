@@ -5,10 +5,11 @@
 <hibernate-configuration>
     <session-factory>
         <!-- Database Connection Settings -->
+        <!-- connection.url / connection.username / connection.password are intentionally
+             omitted here and injected at runtime by HibernateUtil from the DB_URL,
+             DB_USERNAME and DB_PASSWORD environment variables, so credentials never
+             live in a file committed to source control. -->
         <property name="connection.driver_class">org.postgresql.Driver</property>
-        <property name="connection.url">jdbc:postgresql://localhost:5432/dairy_farm_db</property>
-        <property name="connection.username">postgres</property>
-        <property name="connection.password">UBa22S0391!</property>
 
         <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
         <property name="show_sql">true</property>

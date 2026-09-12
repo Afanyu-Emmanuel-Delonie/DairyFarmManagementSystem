@@ -90,7 +90,13 @@ classDiagram
 
 ## Running Requirements
 
-Configure the PostgreSQL connection in `src/main/resources/hibernate.cfg.xml`, create the `dairy_farm_db` database, then deploy the generated WAR to a Jakarta EE 10 compatible server such as Payara 6 or WildFly 30+.
+Create the `dairy_farm_db` PostgreSQL database, set the `DB_URL`, `DB_USERNAME` and `DB_PASSWORD` environment variables (read at startup by `HibernateUtil`; no credentials are stored in `src/main/resources/hibernate.cfg.xml`), then deploy the generated WAR to a Jakarta EE 10 compatible server such as Payara 6 or WildFly 30+.
+
+```
+DB_URL=jdbc:postgresql://localhost:5432/dairy_farm_db
+DB_USERNAME=postgres
+DB_PASSWORD=<your-postgres-password>
+```
 
 ## Project Information
 
